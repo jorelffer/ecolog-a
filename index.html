@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TodoECO</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  background:
+  linear-gradient(
+    150deg,
+    rgba(15,23,32,0.96),
+    rgba(20,32,44,0.96)
+  ),
+  url("https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg");
+
+  background-size:cover;
+  background-attachment:fixed;
+  background-position:center;
+
+  color:white;
+  overflow-x:hidden;
+}
+
+.texto{
+  text-align: justify;
+}
+
+p{
+  margin-bottom:20px;
+}
+
+/* 🌌 CANVAS PARTÍCULAS */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-2;
+}
+
+/* 🌿 BURBUJAS */
+.bubble{
+  position:fixed;
+  bottom:-100px;
+  background:rgba(143,166,142,0.15);
+  border-radius:50%;
+  animation:floatUp linear infinite;
+  z-index:-1;
+}
+
+/* HEADER */
+header{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:0 20px;
+
+  background:
+  linear-gradient(rgba(15,23,20,0.65),
+  rgba(15,23,20,0.75)),
+  url("https://images.pexels.com/photos/142497/pexels-photo-142497.jpeg");
+
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+
+  position:relative;
+}
+
+/* TÍTULO */
+header h1{
+  font-size:5.5rem;
+  font-weight:700;
+  color:#ffffff;
+  letter-spacing:3px;
+  margin-bottom:20px;
+  text-transform:uppercase;
+
+  text-shadow:
+  0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* SUBTÍTULO */
+header p{
+  font-size:1.4rem;
+  color:#e2e8f0;
+  max-width:750px;
+  line-height:1.8;
+  font-weight:300;
+}
+
+h2{ 
+  color:#d8e2dc; 
+  margin-bottom:20px; 
+  font-size:2rem; 
+}
+
+h3{
+  color:#f8fafc;
+  margin-top:20px;
+  margin-bottom:15px;
+}
+
+h4{
+  color:#cbd5c0;
+  margin-top:25px;
+}
+
+
+.lista{
+  list-style: decimal;
+}
+
+.centrar{
+  display:flex;
+  justify-content:center;
+}
+
+/* NAV */
+nav{
+  position:sticky;
+  top:0;
+  background:rgba(15,23,32,0.85);
+  backdrop-filter:blur(12px);
+  padding:18px;
+  text-align:center;
+  z-index:10;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+nav a{
+  color:#d6e4d3;
+  margin:0 15px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color:#ffffff;
+}
+
+/* SECCIONES TIPO PANEL */
+section{
+  padding:80px 10%;
+}
+
+.panel{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  padding:40px;
+  margin:30px 0;
+  backdrop-filter:blur(14px);
+  transition:0.4s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.panel:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 40px rgba(0,0,0,0.5);
+}
+
+.panel{
+  max-width:1400px;
+  margin:auto;
+}
+
+h2{
+  color:#00ff88;
+  margin-bottom:15px;
+}
+
+
+/* IMÁGENES Y VIDEOS */
+.box{
+  width:100%;
+  min-height:400px; /* más espacio */
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  margin:25px 0;
+  background:#111827;
+  padding:10px;
+}
+
+/* imágenes */
+img{
+  max-width:100%;
+  height:auto;
+  display:block;
+}
+
+.box img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:12px;
+}
+
+/* videos locales */
+.box video{
+  width:100%;
+  height:100%;
+  border-radius:12px;
+  object-fit:cover;
+}
+
+/* videos de YouTube */
+.box iframe{
+  width:100%;
+  aspect-ratio:16/9;
+  height:auto;
+  border:none;
+  border-radius:12px;
+}
+
+section{
+  padding:80px 6%;
+}
+
+button{
+  background:#8fa68e;
+  color:white;
+  border:none;
+  padding:14px 25px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#738b73;
+  transform:translateY(-2px);
+}
+
+.links-eco{ 
+  display:flex; 
+  flex-direction:column;
+   gap:15px; 
+}
+
+.links-eco a{ 
+  background:#13202c; 
+  padding:15px 20px; 
+  border-radius:12px; 
+  text-decoration:none; 
+  color:#7CFFB2; 
+  transition:0.3s; 
+  border:1px solid rgba(255,255,255,0.05); 
+} 
+
+.links-eco a:hover{ 
+  background:#1d2b38; 
+  transform:translateX(8px); 
+
+}
+
+
+
+.contador-box{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+  margin-top:30px;
+}
+
+.contador-item{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:30px;
+  border-radius:20px;
+  width:250px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  transition:0.4s;
+}
+
+.contador-item:hover{
+  transform:translateY(-5px);
+}
+
+.contador-item h3{
+  font-size:3rem;
+  color:#00ff88;
+  margin-bottom:10px;
+}
+
+
+/* ANIMACIONES */
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(40px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes floatUp{
+  from{transform:translateY(0); opacity:0.3;}
+  to{transform:translateY(-120vh); opacity:0;}
+}
+
+footer{
+  text-align:center;
+  padding:40px;
+  background:#111827;
+  margin-top:50px;
+  color:#9ca3af;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+
+
+
+/* 🌎 CONTADOR */
+
+.contador-box{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+  margin-top:30px;
+}
+
+.contador-item{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:30px;
+  border-radius:20px;
+  width:250px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  transition:0.4s;
+}
+
+.contador-item:hover{
+  transform:translateY(-5px);
+}
+
+.contador-item h3{
+  font-size:3rem;
+  color:#00ff88;
+  margin-bottom:10px;
+}
+
+
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* TABLETS */
+@media (max-width: 992px){
+
+  header h1{
+    font-size:3.5rem;
+  }
+
+  header p{
+    font-size:1.1rem;
+  }
+
+  section{
+    padding:60px 5%;
+  }
+
+  .panel{
+    padding:30px;
+  }
+
+  .box iframe{
+    height:350px;
+  }
+}
+
+/* CELULARES */
+@media (max-width: 768px){
+
+  nav{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  nav a{
+    margin:0;
+  }
+
+  header{
+    background-attachment:scroll;
+    padding:20px;
+  }
+
+  header h1{
+    font-size:2.5rem;
+    letter-spacing:1px;
+  }
+
+  header p{
+    font-size:1rem;
+    line-height:1.6;
+  }
+
+  h2{
+    font-size:1.6rem;
+  }
+
+  h3{
+    font-size:1.2rem;
+  }
+
+  section{
+    padding:40px 4%;
+  }
+
+  .panel{
+    padding:20px;
+    border-radius:15px;
+  }
+
+  .box{
+    min-height:auto;
+  }
+
+  .box iframe{
+    height:250px;
+  }
+
+  button{
+    width:100%;
+  }
+
+  img{
+    width:100%;
+    height:auto;
+  }
+}
+
+
+/* CELULARES PEQUEÑOS */
+@media (max-width: 480px){
+
+  header h1{
+    font-size:2rem;
+  }
+
+  header p{
+    font-size:0.95rem;
+  }
+
+  .box iframe{
+    height:200px;
+  }
+
+  nav{
+    padding:12px;
+  }
+
+  nav a{
+    font-size:0.95rem;
+  }
+}
+
+</style>
+</head>
+
+<body>
+</div>
+
+<canvas id="particles"></canvas>
+
+<!-- 🌿 BURBUJAS -->
+<div class="bubble" style="left:10%; width:20px; height:20px; animation-duration:10s;"></div>
+<div class="bubble" style="left:30%; width:30px; height:30px; animation-duration:12s;"></div>
+<div class="bubble" style="left:50%; width:15px; height:15px; animation-duration:8s;"></div>
+<div class="bubble" style="left:70%; width:25px; height:25px; animation-duration:14s;"></div>
+
+<header>
+  <h1> ECOLOGÍA</h1>
+  <h3>Cuidemos el planeta</h3>
+  <p>Jorel Fernando</p>
+</header>
+
+<nav>
+  <a href="#intro">Introducción</a>
+  <a href="#imp">Importancia</a>
+  <a href="#prob">Problemas</a>
+  <a href="#sol">Soluciones</a>
+  <a href="#norm">Normas</a>
+</nav>
+
+<!-- INTRO -->
+<section id="intro">
+<div class="panel">
+<h2>📘 Introducción</h2>
+<div class="box" class="center">
+
+  <video controls autoplay  muted loop>
+    <source src="videos/ecovideo.mp4" type="video/mp4">
+    Tu navegador no soporta videos.
+  </video>
+
+</div>
+
+<p class="texto">La ecología es una ciencia fundamental que estudia las relaciones entre los seres vivos y el entorno que los rodea. En un mundo cada vez más afectado por el cambio climático, la contaminación y la pérdida de biodiversidad, comprender la importancia del equilibrio ecológico se ha convertido en una necesidad global. La conservación de los recursos naturales no solo garantiza la supervivencia de numerosas especies, sino también el bienestar y el futuro de la humanidad.
+A través de prácticas sostenibles y una mayor conciencia ambiental, la sociedad puede contribuir activamente a la protección del planeta. La ecología no es únicamente un tema científico; representa un compromiso ético y social orientado a preservar la vida, fomentar el desarrollo responsable y construir un futuro más sostenible para las próximas generaciones.
+En esta página web encontrarás información relevante, recursos educativos y contenidos enfocados en la importancia del cuidado ambiental, la conservación de los ecosistemas y las acciones que cada persona puede realizar para generar un impacto positivo en el medio ambiente.</p>
+<br>
+<h3>Páginas donde podrás encontrar más información sobre el medio ambiente</h3>
+<br>
+<div class="links-eco">
+
+  <a href="https://www.worldwildlife.org/" target="_blank">
+     World Wildlife Fund
+  </a>
+  <br><br>
+  <a href="https://www.unep.org/es" target="_blank">
+    ONU Medio Ambiente
+  </a>
+  <br><br>
+  <a href="https://www.nationalgeographicla.com/medio-ambiente" target="_blank">
+    National Geographic
+  </a>
+  <br><br>
+  <a href="https://www.greenpeace.org/international/" target="_blank">
+     Greenpeace
+  </a>
+  <br><br>
+  <a href="https://earth.org/" target="_blank">
+     Earth.org
+  </a>
+  <br><br>
+  <a href="https://climate.nasa.gov/" target="_blank">
+     NASA Climate Change
+  </a>
+  <br><br>
+  <a href="https://www.un.org/es/climatechange" target="_blank">
+     ONU Cambio Climático
+  </a>
+  <br><br>
+  <a href="https://www.ecologiaverde.com/" target="_blank">
+     Ecología Verde
+  </a>
+  <br><br>
+  <a href="https://www.bbc.com/mundo/topics/cx1m7zg0wqwt" target="_blank">
+     BBC Medio Ambiente
+  </a>
+  <br><br>
+</div>
+</div>
+</section>
+
+<!-- IMPORTANCIA -->
+<section id="imp">
+<div class="panel">
+<h2>🌱 Importancia</h2>
+
+<div class="box" id="img2"><img src="https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg" alt="Cambio climático"></div>
+<h3>Importancia de la ecología en el mundo</h3>
+<br><br>
+<p class="texto">La ecología es una rama de la biología que estudia las relaciones entre los seres vivos y el medio ambiente que los rodea. Su objetivo principal es comprender cómo interactúan los organismos entre sí y de qué manera influyen los factores naturales y humanos en el equilibrio de los ecosistemas. En la actualidad, la ecología se ha convertido en una ciencia fundamental debido a los grandes problemas ambientales que enfrenta el planeta, como el cambio climático, la contaminación, la deforestación y la pérdida de biodiversidad.
+La importancia de la ecología radica en que permite analizar y comprender el funcionamiento de la naturaleza para desarrollar estrategias que ayuden a conservar los recursos naturales y garantizar la supervivencia de todas las especies. Gracias a los estudios ecológicos, el ser humano puede identificar los daños ocasionados al medio ambiente y crear soluciones sostenibles que favorezcan tanto al planeta como a la sociedad.
+Los ecosistemas proporcionan recursos esenciales para la vida, como el agua, el oxígeno, los alimentos y las materias primas. Sin embargo, las actividades humanas han provocado un deterioro ambiental cada vez más evidente. La tala excesiva de árboles, la contaminación de los océanos, el uso indiscriminado de combustibles fósiles y la generación masiva de residuos afectan directamente el equilibrio ecológico. Por ello, la ecología busca promover una relación más responsable entre la humanidad y la naturaleza.
+Además de su importancia científica, la ecología también tiene un valor social, económico y cultural. Un ambiente saludable mejora la calidad de vida de las personas, favorece la agricultura, protege la salud pública y contribuye al desarrollo sostenible de las naciones. Asimismo, fomenta la educación ambiental y la conciencia ecológica, enseñando a las personas la necesidad de cuidar y preservar el entorno natural.
+</p>
+<br>
+
+<h3>Clasificaciones de la ecología</h3>
+<br>
+<p>La ecología se divide en diversas ramas o clasificaciones que permiten estudiar los ecosistemas desde diferentes perspectivas. Cada una de ellas analiza aspectos específicos de la interacción entre los seres vivos y el medio ambiente.</p>
+<br>
+
+<h4>Autoecología</h4>
+<br>
+<p class="texto">La autoecología es la rama de la ecología que estudia a un organismo o especie de manera individual y su relación con el entorno en el que vive. Analiza las características físicas, biológicas y ambientales que permiten la supervivencia y adaptación de una especie en un determinado ecosistema.
+Esta clasificación busca comprender cómo influyen factores como la temperatura, la humedad, la luz solar, la alimentación y el tipo de suelo en el desarrollo de los organismos. Gracias a la autoecología, es posible entender los mecanismos de adaptación que permiten a ciertas especies sobrevivir en ambientes extremos.</p>
+<br>
+<p>Ejemplo:
+Los cactus son plantas adaptadas a los desiertos. Poseen estructuras especiales para almacenar agua y soportar altas temperaturas, lo que les permite sobrevivir en ambientes áridos.</p>
+<br>
+<div class="centrar"><img src="imagenes/autoeco.jpg" alt=""></div>
+<br>
+
+<h4>Demoecología</h4>
+<br>
+<p class="texto">La demoecología, también conocida como ecología de poblaciones, estudia grupos de individuos pertenecientes a la misma especie. Analiza aspectos como el crecimiento poblacional, la distribución geográfica, la densidad, la reproducción y la mortalidad.
+Esta rama es muy importante porque permite comprender cómo cambian las poblaciones con el paso del tiempo y cuáles son los factores que afectan su estabilidad. También ayuda a prevenir la extinción de especies y a controlar problemas relacionados con la sobrepoblación o la disminución de ciertos organismos.</p>
+<br>
+<p>Ejemplo:
+El estudio de las poblaciones de tortugas marinas permite identificar las amenazas que enfrentan, como la contaminación y la pesca ilegal, para desarrollar programas de conservación.</p>
+<br>
+<div class="centrar"><img src="https://images.pexels.com/photos/847393/pexels-photo-847393.jpeg" alt=""></div>
+<br>
+
+<h4>Sinecología</h4>
+<br>
+<p class="texto">La sinecología estudia las comunidades formadas por diferentes especies y las relaciones que existen entre ellas dentro de un ecosistema. Analiza cómo interactúan los organismos mediante procesos como la competencia, la depredación, el mutualismo y el parasitismo.
+Esta clasificación es esencial para comprender el equilibrio ecológico y el funcionamiento de los ecosistemas naturales. Cada especie cumple una función importante dentro de la cadena alimenticia y cualquier alteración puede afectar a toda la comunidad.</p>
+<br>
+<p>Ejemplo:
+En una selva tropical, las plantas producen alimento mediante la fotosíntesis, los insectos ayudan en la polinización y los animales dispersan semillas, manteniendo el equilibrio del ecosistema.</p>
+<br>
+<div class="centrar"><img src="https://images.pexels.com/photos/975771/pexels-photo-975771.jpeg" alt=""></div>
+<br>
+
+<h4>Ecología terrestre</h4>
+<br>
+<p class="texto">La ecología terrestre se encarga de estudiar los ecosistemas que se desarrollan sobre la superficie terrestre. Analiza las características de los bosques, selvas, desiertos, montañas, praderas y otros ambientes naturales.
+Esta rama investiga cómo influyen factores como el clima, el relieve, la vegetación y los recursos naturales en la vida de los organismos terrestres. También estudia los efectos de las actividades humanas sobre estos ecosistemas.</p>
+<br>
+<p>Ejemplo:
+La deforestación en la Amazonía afecta la biodiversidad, altera el clima y provoca la pérdida de hábitats naturales para miles de especies.</p>
+<br>
+<div class="centrar"><img src="https://images.pexels.com/photos/886521/pexels-photo-886521.jpeg" alt="Planta en mano"></div>
+<br>
+
+<h4>Ecología acuática</h4>
+<br>
+<p class="texto">La ecología acuática estudia los ecosistemas relacionados con el agua, incluyendo mares, océanos, ríos, lagos y humedales. Analiza las condiciones físicas y químicas del agua y cómo estas influyen en los organismos acuáticos.
+El agua es un recurso fundamental para la vida, por lo que esta rama tiene gran importancia en la conservación de especies marinas y en la protección de los recursos hídricos.
+</p>
+<br>
+<p>Ejemplo:
+La contaminación de los océanos con plásticos afecta gravemente a peces, tortugas, aves marinas y otras especies acuáticas.</p>
+<br>
+<div class="centrar"><img src="https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg" alt=""></div>
+<br>
+
+<h4>Ecología humana</h4>
+<br>
+<p class="texto">La ecología humana estudia la relación entre las personas y el medio ambiente. Analiza cómo las actividades humanas impactan los ecosistemas y cómo el entorno influye en la calidad de vida de la sociedad.Esta clasificación aborda temas como la contaminación, el crecimiento urbano, el consumo de recursos naturales y el desarrollo sostenible.
+</p>
+<br>
+<p>Ejemplo:
+Las emisiones de gases contaminantes provenientes de fábricas y automóviles contribuyen al calentamiento global y afectan la salud humana.</p>
+<br>
+<div class="centrar"><img src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg" alt=""></div>
+<br>
+
+<h4>Ecología urbana</h4>
+<br>
+<p class="texto">La ecología urbana se enfoca en el estudio de las ciudades y los impactos ambientales generados por las actividades urbanas. Analiza problemas como la contaminación del aire, el manejo de residuos, el ruido y la escasez de áreas verdes.
+El crecimiento acelerado de las ciudades ha generado importantes desafíos ambientales, por lo que esta rama busca desarrollar ciudades más sostenibles y amigables con el medio ambiente.</p>
+<br>
+<p>Ejemplo:
+La creación de parques y áreas verdes en las ciudades ayuda a mejorar la calidad del aire y disminuir las temperaturas urbanas.</p>
+<br>
+<div class="centrar"><img src="imagenes/ecourba.jpg" alt=""></div>
+<br>
+
+</div>
+</section>
+
+<!-- PROBLEMAS -->
+<section id="prob">
+<div class="panel">
+<h2>⚠️ Problemas</h2>
+
+<div class="box">
+
+  <video controls autoplay muted loop>
+    <source src="videos/problemas.mp4" type="video/mp4">
+    Tu navegador no soporta videos.
+  </video>
+
+</div>
+
+<p class="texto">La ecología estudia cómo interactúan los seres vivos entre sí y con el medio ambiente. Gracias a esta ciencia entendemos cómo funcionan los ecosistemas y por qué son fundamentales para la vida en el planeta. Sin embargo, las actividades humanas han provocado alteraciones ambientales muy graves que amenazan el equilibrio natural de la Tierra.
+Los problemas ecológicos actuales no afectan solamente a plantas y animales; también tienen consecuencias directas sobre la economía, la salud, la alimentación y la supervivencia humana. A continuación se explican de manera más detallada los principales problemas ecológicos del mundo.</p>
+<br><br>
+<h3>Principales problemas ecológicos</h3>
+<br>
+
+<h3>1.-Cambio climático</h3>
+<p>El cambio climático es la modificación progresiva de las temperaturas y de los patrones climáticos del planeta. Aunque el clima siempre ha cambiado de manera natural a lo largo de la historia de la Tierra, actualmente el cambio ocurre a una velocidad mucho mayor debido principalmente a las actividades humanas.
+¿Cómo se produce?
+La atmósfera terrestre contiene gases que retienen parte del calor del Sol. Este fenómeno natural se conoce como “efecto invernadero” y es necesario para la vida. El problema surge cuando las actividades humanas aumentan excesivamente la concentración de estos gases.
+</p>
+<h4>Principales causas</h4>
+<ul>
+  <li>Quema de combustibles fósiles (petróleo, gas y carbón).</li>
+  <li>Deforestación masiva.</li>
+  <li>Agricultura y ganadería intensiva.</li>
+  <li>Industria y transporte.</li>
+</ul>
+<h4>Consecuencias</h4>
+<ul>
+  <li>Aumento de la temperatura global.</li>
+  <li>Derretimiento de glaciares y polos.</li>
+  <li>Incremento del nivel del mar.</li>
+  <li>Sequías e inundaciones más frecuentes.</li>
+  <li>Huracanes y fenómenos meteorológicos extremos.</li>
+</ul>
+<h4>Impacto social</h4>
+<p>El cambio climático afecta la producción de alimentos, el acceso al agua, la salud humana y provoca migraciones ambientales.</p>
+<br>
+
+<h3>2.-Deforestación</h3>
+<p class="texto">La deforestación es la destrucción de bosques y selvas mediante la tala o quema de árboles. Es uno de los problemas ecológicos más graves porque los bosques son esenciales para mantener el equilibrio ambiental del planeta.
+Los árboles absorben dióxido de carbono (CO₂), producen oxígeno y ayudan a regular el clima y el ciclo del agua. Cuando grandes extensiones de bosque desaparecen, también desaparecen los animales y plantas que viven allí.</p>
+<h4>Principales motivos</h4>
+<ul>
+  <li>Expansión agrícola y ganadera.</li>
+  <li>Tala ilegal.</li>
+  <li>Urbanización.</li>
+  <li>Minería.</li>
+  <li>Construcción de carreteras.</li>
+</ul>
+
+<h4>Consecuencias ecológicas</h4>
+<ul>
+  <li>Destrucción de hábitats.</li>
+  <li>Extinción de especies.</li>
+  <li>Erosión del suelo.</li>
+  <li>Alteración del ciclo del agua.</li>
+  <li>Aumento del CO₂ en la atmósfera.</li>
+</ul>
+<div class="centrar"><p>Uno de los casos más conocidos es la selva amazónica, considerada fundamental para el equilibrio climático mundial.</p></div>
+<div class="centrar"><img src="imagenes/amazo.jpg" alt=""></div>
+
+<h3>3.-Pérdida de biodiversidad</h3>
+<p class="texto">La pérdida de biodiversidad se refiere a la disminución o desaparición de la diversidad biológica, entendida esta última como la variedad de seres vivos que habitan el planeta, sus distintos niveles de organización biológica y su respectiva variabilidad genética, así como los patrones naturales presentes en los ecosistemas. La edición del Informe Planeta Vivo 2024, se abre en ventana nueva. , elaborado por la ONG WWFE, se abre en ventana nueva. , revela un alarmante descenso del 73 % en el tamaño promedio de las poblaciones de más de 5.000 especies de mamíferos, aves, peces, reptiles y anfibios en los últimos 50 años. Este indicador refleja con claridad el grave deterioro que está sufriendo la biodiversidad a nivel global.</p>
+<h4>Causas</h4>
+<ul>
+  <li>Deforestación</li>
+  <li>Contaminación</li>
+  <li>Cambio climático</li>
+  <li>Caza ilegal</li>
+</ul>
+<h4>Consecuencias</h4>
+<ul>
+  <li>Desequilibrio ecológico</li>
+  <li>Extinción de especies</li>
+  <li>Alteración de cadenas alimenticias</li>
+  <li>Pérdida de recursos medicinales y alimenticios</li>
+</ul>
+<div class="centrar"><img src="imagenes/perdida.jpg" alt=""></div>
+</div>
+</section>
+
+<section id="norm">
+<div class="panel">
+<h2>🌱 Normas</h2>
+
+<div class="box" id="img2"width="600"><img src="imagenes/normasprin.png"width="600" height="450"></div>
+
+
+<p>Las normas ecológicas son reglas establecidas para proteger el medio ambiente y fomentar una convivencia respetuosa con la naturaleza. Estas normas buscan reducir el impacto negativo de las actividades humanas en el planeta.
+
+Una de las normas más importantes es no tirar basura en espacios naturales como calles, ríos, playas o bosques, ya que esto contamina el entorno y daña a los seres vivos. También es fundamental respetar las áreas naturales protegidas, ya que son zonas importantes para la conservación de la biodiversidad.
+
+Otra norma ecológica es la correcta separación de residuos, lo que facilita el reciclaje y reduce la contaminación. Además, se debe evitar el desperdicio de agua y energía, ya que son recursos esenciales que pueden agotarse si no se utilizan de forma responsable.
+
+Por último, es importante respetar la vida de los animales y su hábitat natural, evitando la caza indiscriminada y la destrucción de los ecosistemas donde viven.</p>
+<br>
+<h2>♻️ Lista de NOM ambientales en México</h2>
+<h3>💧 NOM-001-SEMARNAT-2021</h3>
+ <div class="centrar"><img src="imagenes/001.jpg" width="600" height="400"></div>
+   <p>Regula los límites de contaminantes en las descargas de aguas residuales en cuerpos de agua y bienes nacionales. Su objetivo es evitar la contaminación de ríos, lagos y mares.</p>
+<h3>🌬️ NOM-085-SEMARNAT-2011</h3>
+<div class="centrar"><img src="imagenes/085.jpg" width="600" height="400"></div>
+  <p>Establece los límites de emisión de contaminantes a la atmósfera provenientes de equipos de combustión como calderas o hornos industriales. Ayuda a reducir la contaminación del aire.</p>
+<h3>🏭 NOM-043-SEMARNAT-1993</h3>
+<div class="centrar"><img src="imagenes/043.jpg" width="600" height="400"></div>
+  <p>Controla la emisión de partículas sólidas en el aire, como polvo o humo, provenientes de procesos industriales o actividades que generan contaminación.</p>  
+<h3>🗑️ NOM-083-SEMARNAT-2003</h3>
+<div class="centrar"><img src="imagenes/083.jpg" width="600" height="400"></div>
+  <p>Establece las condiciones que deben cumplir los sitios de disposición final de residuos sólidos urbanos, es decir, los rellenos sanitarios, para evitar contaminación del suelo y del agua.</p>
+<h3>🌳 NOM-059-SEMARNAT-2010</h3>
+<div class="centrar"><img src="imagenes/059.jpg" width="600" height="400"></div>
+  <p>Protege las especies de flora y fauna silvestres en riesgo de extinción en México. Clasifica especies como amenazadas, en peligro o sujetas a protección especial.</p>
+<h3>🌱 NOM-152-SEMARNAT-2006</h3>
+<div class="centrar"><img src="imagenes/152.jpg" width="600" height="400"></div>
+ <p>Regula el manejo y aprovechamiento de los recursos forestales, con el objetivo de evitar la tala ilegal y promover el uso sustentable de los bosques.</p> 
+<h3>🔊 NOM-081-SEMARNAT-1994</h3>
+<div class="centrar"><img src="imagenes/081.jpg" width="600" height="400"></div>
+  <p>Establece los límites máximos de ruido permitido en diferentes zonas (residenciales, industriales, comerciales), para reducir la contaminación acústica.</p>  
+<h3>💧 NOM-127-SSA1-2021</h3>
+<div class="centrar"><img src="imagenes/127.png" width="600" height="400"></div>
+  <p>Regula la calidad del agua para uso y consumo humano, asegurando que sea segura y libre de contaminantes.</p>  
+</div>
+</section>
+
+
+<!-- SOLUCIONES -->
+<section id="sol">
+<div class="panel">
+<h2>♻️ Soluciones</h2>
+
+<div class="box">
+
+  <video controls autoplay muted loop>
+    <source src="videos/problemas.mp4" type="video/mp4">
+    Tu navegador no soporta videos.
+  </video>
+
+</div>
+
+<p id="msg" class="texto">La solución a los problemas ecológicos requiere cambios importantes en la manera en que las personas utilizan los recursos naturales y se relacionan con el medio ambiente. Actualmente, uno de los principales objetivos es reducir la contaminación y disminuir los efectos del cambio climático mediante el uso de energías renovables como la energía solar y eólica, las cuales producen menos gases contaminantes que los combustibles fósiles. También se busca promover un consumo más responsable, reducir el uso de plásticos y fomentar el reciclaje para disminuir la cantidad de residuos que terminan contaminando ríos, mares y suelos.
+
+Otra solución importante es la protección de los bosques y ecosistemas naturales. La reforestación y el cuidado de áreas naturales protegidas ayudan a conservar la biodiversidad y a mantener el equilibrio ecológico del planeta. Además, muchos países trabajan en proyectos de restauración ambiental para recuperar ecosistemas dañados por la deforestación, la contaminación o los incendios forestales. El cuidado del agua también forma parte de las soluciones ecológicas, ya que se impulsan medidas para evitar el desperdicio y mejorar el tratamiento de aguas residuales.
+
+La educación ambiental es considerada una de las herramientas más importantes para enfrentar los problemas ecológicos. A través de campañas, programas escolares y actividades comunitarias, se busca crear conciencia sobre la importancia de cuidar el medio ambiente y adoptar hábitos sostenibles. La participación de la sociedad es fundamental, porque pequeñas acciones como ahorrar energía, separar residuos o utilizar menos plástico pueden generar un impacto positivo cuando muchas personas las realizan.
+
+Actualmente existen diversos proyectos ambientales en marcha en diferentes partes del mundo. En México, por ejemplo, se desarrolla el Programa Nacional de Restauración Ambiental 2025-2030, impulsado por la Semarnat, cuyo objetivo es restaurar ecosistemas dañados, recuperar manglares y fortalecer la conservación de áreas naturales. También se llevan a cabo proyectos de reforestación y conservación de biodiversidad en la Selva Maya y otras regiones del país, donde organizaciones ambientales trabajan junto con comunidades locales para proteger especies y promover actividades sostenibles. Estos proyectos demuestran que, aunque los problemas ambientales son graves, todavía existen esfuerzos importantes para proteger el planeta y construir un futuro más sostenible.
+</p>
+
+<h3>Programa Nacional de Restauración Ambiental 2025-2030</h3>
+<p class="texto">El Programa Nacional de Restauración Ambiental 2025–2030 (PNRA) es un proyecto impulsado por la Secretaría de Medio Ambiente y Recursos Naturales (SEMARNAT) que tiene como objetivo recuperar ecosistemas dañados en México y reducir el deterioro ambiental del país. Este programa fue presentado en 2025 como una estrategia nacional para enfrentar problemas como la deforestación, la contaminación, la pérdida de biodiversidad y el daño en ríos, bosques, manglares y ecosistemas marinos.
+El programa busca restaurar zonas naturales afectadas mediante la participación de gobiernos, comunidades, organizaciones ambientales, universidades y empresas. Entre sus principales metas se encuentra restaurar ecosistemas forestales, recuperar manglares y áreas costeras, mejorar la calidad ambiental de cuencas importantes como los ríos Lerma-Santiago, Atoyac y Río Sonora, además de rehabilitar parques y bosques urbanos. También pretende contribuir a la reducción de emisiones contaminantes y alcanzar una deforestación neta cero para el año 2030.
+Uno de los aspectos más importantes del PNRA es que no solo busca proteger la naturaleza, sino también mejorar la calidad de vida de las personas. El proyecto promueve la participación de comunidades locales y pueblos indígenas en las actividades de restauración ambiental, creando sistemas de vigilancia y monitoreo comunitario para cuidar los ecosistemas. Además, el programa contempla acciones de reforestación, restauración de manglares, recuperación de cuerpos de agua y conservación de especies en peligro.
+La SEMARNAT informó que el programa trabajará inicialmente en decenas de sitios prioritarios del país donde el deterioro ambiental es más grave. Este proyecto es considerado uno de los planes ambientales más importantes en México en los últimos años, debido a que más del 30% del territorio nacional presenta algún nivel de degradación ambiental.</p>
+  <div class="centrar">
+  <video controls autoplay  muted loop>
+    <source src="videos/programa.mp4" type="video/mp4">
+    Tu navegador no soporta videos.
+  </video>
+</div>
+
+  <br>
+  <div class="links-eco">
+    <a href="https://www.wwf.org.mx/?395810/Semarnat-presenta-el-Programa-Nacional-de-Restauracion-Ambiental-PNRA-20252030/?utm_source=chatgpt.com">Conocer más</a>
+  </div>
+
+</div>
+</section>
+
+<section>
+  <div class="panel">
+    <h2>Gráfica de contaminación en América latina</h2>
+    <div class="centrar"><img src="imagenes/grafica.jpeg"></div>
+  </div>
+</section>
+
+<script>
+/* 📷 IMÁGENES */
+function loadImg(event,id){
+  const file = event.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    document.getElementById(id).innerHTML =
+      `<img src="${e.target.result}">`;
+  }
+
+  reader.readAsDataURL(file);
+}
+
+/* 🌌 PARTÍCULAS */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*3,
+    dx:(Math.random()-0.5)*1,
+    dy:(Math.random()-0.5)*1
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="#00ff88";
+
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if(p.x<0||p.x>canvas.width) p.dx*=-1;
+    if(p.y<0||p.y>canvas.height) p.dy*=-1;
+  });
+
+  requestAnimationFrame(animate);
+}
+
+/* 🌎 CONTADOR ECOLÓGICO */
+
+let trees = 0;
+let plastic = 0;
+let co2 = 0;
+
+const counter = setInterval(()=>{
+
+  if(trees < 2400){
+    trees += 20;
+    document.getElementById("trees").innerHTML = trees;
+  }
+
+  if(plastic < 15){
+    plastic += 1;
+    document.getElementById("plastic").innerHTML = plastic;
+  }
+
+  if(co2 < 37){
+    co2 += 1;
+    document.getElementById("co2").innerHTML = co2;
+  }
+
+},30);
+
+
+</script>
+<section id="contador">
+  <div class="panel">
+
+    <h2>🌎 Datos ambientales</h2>
+
+    <div class="contador-box">
+
+      <div class="contador-item">
+        <h3 id="trees">0</h3>
+        <p>Árboles talados por minuto</p>
+      </div>
+
+      <div class="contador-item">
+        <h3 id="plastic">0</h3>
+        <p>Toneladas de plástico en océanos</p>
+      </div>
+
+      <div class="contador-item">
+        <h3 id="co2">0</h3>
+        <p>Millones de toneladas de CO₂</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<footer>
+  <p>© 2026 TodoECO | Conciencia ambiental para un futuro sostenible </p>
+  <p> Hecha por: Jorel Fernando</p>
+</footer>
+</body>
+</html> 
